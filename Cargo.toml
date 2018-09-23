@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "warkov",
+    "warkov-wordgen",
+]

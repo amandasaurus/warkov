@@ -1,0 +1,9 @@
+[package]
+name = "warkov-wordgen"
+version = "0.1.0"
+authors = ["Rory McCann <rory@technomancy.org>"]
+
+[dependencies]
+warkov = { path = "../warkov/" }
+quicli = "0.3"
+

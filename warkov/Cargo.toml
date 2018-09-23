@@ -1,0 +1,7 @@
+[package]
+name = "warkov"
+version = "0.1.0"
+authors = ["Rory McCann <rory@technomancy.org>"]
+
+[dependencies]
+rand = "0.5"

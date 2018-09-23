@@ -1,0 +1,7 @@
+Generate random words based on an input list of words.
+
+The input file must have one item per line. New words will be generated based
+on those words.
+
+= Experimenting with lookahead values
+

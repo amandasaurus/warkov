@@ -1,0 +1,11 @@
+warkov
+
+a weighted markov chain in rust
+
+= `warkov`
+
+This is the standard library for generating things with Markov Chains
+
+= `warkov-wordgen`
+
+Generate things from a text file of previous entries
