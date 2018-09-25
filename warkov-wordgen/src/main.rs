@@ -9,23 +9,29 @@ use quicli::prelude::*;
 use warkov::MarkovChain;
 
 #[derive(Debug, StructOpt)]
+#[structopt(name = "warkov-wordgen", about = "Generate words from a file of existing words", author="")]
 struct Cli {
 
     #[structopt(short="n", long="num", default_value="10")]
+    /// The number of new words to generate (unless `min_look` is specified)
     num: usize,
 
     #[structopt(long="max-look", default_value="3")]
+    /// The lookahead to use when generating
     max_look: usize,
 
     #[structopt(long="min-look")]
+    /// If specified, `num` items will be generated from every lookahead value from `min_look` to
+    /// `max_look` inclusive.
     min_look: Option<usize>,
 
     #[structopt(parse(from_os_str))]
+    /// Filename to read example words from
     filename: PathBuf,
 }
 
 fn generate(markov: &mut MarkovChain<char, impl warkov::Rng>, len: usize) -> String {
-    markov.generate_max_look(len).into_iter().enumerate().map(|(i, c)| if i == 0 { c.to_uppercase().to_string() } else { c.to_string() }).collect()
+    markov.generate_max_look(len).into_iter().collect()
 }
 
 main!(|args: Cli| {

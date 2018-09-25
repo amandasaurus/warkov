@@ -1,11 +1,11 @@
-warkov
+== warkov
 
-a weighted markov chain in rust
+A weighted link:https://en.wikipedia.org/wiki/Markov_chain[markov chain] in rust. This project contains the base library and command line programmes to generate things from other things.
 
-= `warkov`
+=== `warkov`
 
-This is the standard library for generating things with Markov Chains
+This is the library for generating things with Markov Chains, and can be used by other programmes. See link:target/doc/warkov/index.html[the API documentation].
 
-= `warkov-wordgen`
+=== `warkov-wordgen`
 
-Generate things from a text file of previous entries
+Generate words from a text file of existing entries. See link:warkov-wordgen/README.adoc[it's README].
