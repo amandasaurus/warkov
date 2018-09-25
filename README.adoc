@@ -9,3 +9,5 @@ This is the library for generating things with Markov Chains, and can be used by
 === `warkov-wordgen`
 
 Generate words from a text file of existing entries. See link:warkov-wordgen/README.adoc[it's README].
+
+All copyrighted, and licenced under the GNU Affero GPL v3 (or later), see link:LICENCE[]

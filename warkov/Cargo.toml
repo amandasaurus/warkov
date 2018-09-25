@@ -2,6 +2,9 @@
 name = "warkov"
 version = "0.1.0"
 authors = ["Rory McCann <rory@technomancy.org>"]
+license = "AGPL-3+"
+repository = "https://github.com/rory/warkov"
+description = "Use markov-chains to generate new items"
 
 [dependencies]
 rand = "0.5"

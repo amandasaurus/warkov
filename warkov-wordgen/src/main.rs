@@ -9,7 +9,7 @@ use quicli::prelude::*;
 use warkov::MarkovChain;
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "warkov-wordgen", about = "Generate words from a file of existing words", author="")]
+#[structopt(about = "Generate words from a file of existing words", author="")]
 struct Cli {
 
     #[structopt(short="n", long="num", default_value="10")]
