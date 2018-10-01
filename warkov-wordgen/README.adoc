@@ -2,10 +2,82 @@
 
 Generate random words based on a file of existing words.
 
-The input file must have one item per line. New words will be generated based
-on those words.
+New words are generated from an input file of one word per line.
 
-===
+=== Example
 
-=== Experimenting with lookahead values
+    warkov-wordgen ./source-data/tds.txt 
+    kinakeenagh
+    coolnaknockan
+    laheenrathmore
+    commonkehan
+    monagroe
+    cahihillaun
+    redans
+    bally
+    cappagh
+    gorttogh
 
+By default it produces 10 new words, use `-n` to change that.
+
+=== Lookbehind
+
+Markov Chains work by choosing the next item based on looking at (up to) the last N items. This is the "lookbehind", and is controlled by the
+`--max-look` option. The default of 3 is a good value.
+
+For small values (e.g. 1) the output is too random to make sense. For a high
+value (e.g. 8) it cannot generate much new words and often repeating existing
+words.
+
+==== Experimenting with lookbehind values
+
+You can experiment with lookbehind values with the `--min-look`. For each
+number between `--min-look` and `--max-look`, it will generate `-n` words with
+that value and print them out, along with the lookbehind value. This allows you
+to find a good value for lookbehind for your usecase.
+
+===== Example
+
+    warkov-wordgen -n 2 --min-look 1 --max-look 10  ./source-data/tds.txt 
+    10 brollagh
+    10 tullyglass
+    9 coolbaun demesne
+    9 millicent north
+    8 ballyhohan
+    8 knockane
+    7 templeogue
+    7 carrowmullin
+    6 ballintober
+    6 brehaun
+    5 newtown downing
+    5 drumalis
+    4 ballyglass west
+    4 firee
+    3 ballywardle
+    3 dromadalmore
+    2 parglackmore
+    2 ballinrean (chandtown
+    1 bal lousm
+    1 bar
+
+
+=== Generating sample data from OpenStreetMap
+
+Download a region extract from link:https://download.geofabrik.de/[Geofabrik's
+OSM Extract] service. Install
+link:https://wiki.openstreetmap.org/wiki/Osmconvert[osmconvert] (on
+Debian/Ubuntu: `apt-get install osmctools`).
+
+This will extract all objects from a file with the place tag, and put the name
+into `places.txt`
+
+    osmconvert datafile.osm.pbf --csv="place name"  | grep -vP "^\t" | cut -f 2 > places.txt
+
+This extract all the names of all pubs (`amenity=pub`) from a file and put the
+names in `pubs.txt`.
+
+    osmconvert datafile.osm.pbf --csv="amenity name" | grep -P '^pub\t' | cut -f2 > pubs.txt
+
+Read more: link:https://wiki.openstreetmap.org/wiki/Osmconvert[`osmconvert`
+documentation]. link:https://osmcode.org/osmium-tool/[osmium-tool] could also
+be used to filter or extract OSM tags.

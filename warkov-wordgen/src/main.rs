@@ -17,11 +17,11 @@ struct Cli {
     num: usize,
 
     #[structopt(long="max-look", default_value="3")]
-    /// The lookahead to use when generating
+    /// The max lookbehind to use when generating
     max_look: usize,
 
     #[structopt(long="min-look")]
-    /// If specified, `num` items will be generated from every lookahead value from `min_look` to
+    /// If specified, `num` items will be generated from every lookbehind value from `min_look` to
     /// `max_look` inclusive.
     min_look: Option<usize>,
 
