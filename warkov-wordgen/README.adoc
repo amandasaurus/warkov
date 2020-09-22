@@ -71,12 +71,12 @@ Debian/Ubuntu: `apt-get install osmctools`).
 This will extract all objects from a file with the place tag, and put the name
 into `places.txt`
 
-    osmconvert datafile.osm.pbf --csv="place name"  | grep -vP "^\t" | cut -f 2 > places.txt
+    osmconvert datafile.osm.pbf --csv="place name"  | grep -vP "^\t" | cut -f 2 | grep -vP "^\s*$" > places.txt
 
 This extract all the names of all pubs (`amenity=pub`) from a file and put the
 names in `pubs.txt`.
 
-    osmconvert datafile.osm.pbf --csv="amenity name" | grep -P '^pub\t' | cut -f2 > pubs.txt
+    osmconvert datafile.osm.pbf --csv="amenity name" | grep -P '^pub\t' | cut -f2 | grep -vP "^\s*$" > pubs.txt
 
 Read more: link:https://wiki.openstreetmap.org/wiki/Osmconvert[`osmconvert`
 documentation]. link:https://osmcode.org/osmium-tool/[osmium-tool] could also

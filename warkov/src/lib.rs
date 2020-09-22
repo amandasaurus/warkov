@@ -1,3 +1,27 @@
+//! Markov chain generator
+//!
+//! # Documenation
+//!
+//! ## Look a head size
+//! When generating a new term, it looks at the previous X items that it has already output to
+//! decide the next item. This number controls this.
+//!
+//! # Example
+//!
+//! ```
+//! use warkov::MarkovChain;
+//!
+//! // Create a new generator
+//! let mut mc = MarkovChain::new(5);
+//!
+//! // Train it on some words
+//! mc.train("foo".chars());
+//! mc.train("bar".chars());
+//! mc.train("baz".chars());
+//!
+//! // Generate a new word
+//! let new_word: Vec<char> = mc.generate();
+//! ```
 extern crate rand;
 
 use std::collections::{HashMap, BTreeMap};
@@ -6,6 +30,7 @@ use std::fmt::Debug;
 pub use rand::Rng;
 
 /// A Markov Chain.
+///
 #[derive(Default)]
 pub struct MarkovChain<T, R>
     where T: Hash + Eq + Clone + Default + Ord + Debug,
@@ -24,7 +49,7 @@ impl<T> MarkovChain<T, rand::ThreadRng>
     /// Uses the stock thread local random number generator
     ///
     /// # Panics
-    /// If size is 0
+    /// If size is 0.
     pub fn new(size: usize) -> Self {
         MarkovChain::new_with_rng(size, rand::thread_rng())
     }
@@ -37,7 +62,7 @@ impl<T, R> MarkovChain<T, R>
     /// Creates a MarkovChain with the specified random number generator, and max look a head size
     ///
     /// # Panics
-    /// If size is 0
+    /// If size is 0.
     pub fn new_with_rng(size: usize, rng: R) -> Self {
         assert!(size > 0);
         MarkovChain{ size, rng: rng,  stages: HashMap::new(), alphabet: (0, BTreeMap::new()) }
@@ -58,7 +83,7 @@ impl<T, R> MarkovChain<T, R>
         }
     }
 
-    /// Teach the markov chain `term`.
+    /// Teach the markov chain this `term`.
     pub fn train(&mut self, term: impl Iterator<Item=T>) {
         let term: Vec<T> = term.into_iter().collect();
         self.alphabet.0 += term.len();
@@ -80,12 +105,16 @@ impl<T, R> MarkovChain<T, R>
 
     }
 
-    /// Generates a term using the max look ahead
+    /// Generates a term.
+    /// Uses the lookbehind value this was created with.
     pub fn generate(&mut self) -> Vec<T> {
         let curr_size = self.size;
         self.generate_max_look(curr_size)
     }
 
+    /// Generates a new term with a custom lookbehind.
+    /// # Panics
+    /// If `max_lookbehind` is 0 or greater than the lookbehind this was created with.
     pub fn generate_max_look(&mut self, max_lookbehind: usize) -> Vec<T> {
         assert!(max_lookbehind >= 1 && max_lookbehind <= self.size);
 
