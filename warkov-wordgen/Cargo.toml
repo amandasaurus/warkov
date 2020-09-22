@@ -2,8 +2,11 @@
 name = "warkov-wordgen"
 version = "0.1.0"
 authors = ["Rory McCann <rory@technomancy.org>"]
+license = "AGPL-3.0+"
+repository = "https://github.com/rory/warkov"
+description = "Use markov-chains to generate new items"
+
 
 [dependencies]
-warkov = { path = "../warkov/" }
+warkov = "0.1"
 quicli = "0.3"
-
