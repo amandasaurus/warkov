@@ -1,3 +1,4 @@
+#![allow(clippy::type_complexity)]
 //! Markov chain generator
 //!
 //! # Documenation
@@ -70,7 +71,7 @@ where
         assert!(size > 0);
         MarkovChain {
             size,
-            rng: rng,
+            rng,
             stages: HashMap::new(),
             alphabet: (0, BTreeMap::new()),
         }
@@ -163,9 +164,9 @@ where
     }
 }
 
-fn weighted_choice<'a, T: Debug + Clone + Default, R: Rng>(
+fn weighted_choice<T: Debug + Clone + Default, R: Rng>(
     rng: &mut R,
-    options: &'a (usize, BTreeMap<T, usize>),
+    options: &(usize, BTreeMap<T, usize>),
 ) -> T {
     debug_assert_eq!(options.0, options.1.values().sum());
     let random_number = rng.gen_range(0, options.0);
@@ -179,7 +180,7 @@ fn weighted_choice<'a, T: Debug + Clone + Default, R: Rng>(
         curr_value += value;
     }
 
-    return last_key.to_owned();
+    last_key.to_owned()
 }
 
 #[cfg(test)]
