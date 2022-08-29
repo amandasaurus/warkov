@@ -1,6 +1,6 @@
-extern crate warkov;
 extern crate anyhow;
 extern crate clap;
+extern crate warkov;
 use clap::Parser;
 
 use std::path::PathBuf;
@@ -10,18 +10,21 @@ use anyhow::Result;
 use warkov::MarkovChain;
 
 #[derive(Parser, Debug)]
-#[clap(author, version, about="Generate words from a file of existing words")]
+#[clap(
+    author,
+    version,
+    about = "Generate words from a file of existing words"
+)]
 struct Args {
-
-    #[clap(short, long, default_value="10")]
+    #[clap(short, long, default_value = "10")]
     /// The number of new words to generate (unless `min_look` is specified)
     num: usize,
 
-    #[clap(long="max-look", default_value="3")]
+    #[clap(long = "max-look", default_value = "3")]
     /// The max lookbehind to use when generating
     max_look: usize,
 
-    #[clap(long="min-look")]
+    #[clap(long = "min-look")]
     /// If specified, `num` items will be generated from every lookbehind value from `min_look` to
     /// `max_look` inclusive.
     min_look: Option<usize>,
@@ -48,16 +51,15 @@ fn main() -> Result<()> {
             for _ in 0..args.num {
                 println!("{}", generate(&mut markov, args.max_look))
             }
-        },
+        }
         Some(min_look) => {
             for len in (min_look..=args.max_look).rev() {
                 for _ in 0..args.num {
                     println!("{} {}", len, generate(&mut markov, len))
                 }
             }
-        },
+        }
     }
 
     Ok(())
-
 }
