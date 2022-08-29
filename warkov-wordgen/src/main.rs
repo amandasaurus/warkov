@@ -1,31 +1,31 @@
 extern crate warkov;
-
-#[macro_use]
-extern crate quicli;
+#[macro_use] extern crate clap;
+use clap::Parser;
 
 use std::path::PathBuf;
 
-use quicli::prelude::*;
+use anyhow::Result;
+
 use warkov::MarkovChain;
 
-#[derive(Debug, StructOpt)]
-#[structopt(about = "Generate words from a file of existing words", author="")]
-struct Cli {
+#[derive(Parser, Debug)]
+#[clap(author, version, about="Generate words from a file of existing words")]
+struct Args {
 
-    #[structopt(short="n", long="num", default_value="10")]
+    #[clap(short, long, default_value="10")]
     /// The number of new words to generate (unless `min_look` is specified)
     num: usize,
 
-    #[structopt(long="max-look", default_value="3")]
+    #[clap(long="max-look", default_value="3")]
     /// The max lookbehind to use when generating
     max_look: usize,
 
-    #[structopt(long="min-look")]
+    #[clap(long="min-look")]
     /// If specified, `num` items will be generated from every lookbehind value from `min_look` to
     /// `max_look` inclusive.
     min_look: Option<usize>,
 
-    #[structopt(parse(from_os_str))]
+    #[clap(parse(from_os_str))]
     /// Filename to read example words from
     filename: PathBuf,
 }
@@ -34,8 +34,9 @@ fn generate(markov: &mut MarkovChain<char, impl warkov::Rng>, len: usize) -> Str
     markov.generate_max_look(len).into_iter().collect()
 }
 
-main!(|args: Cli| {
-    let file = read_file(args.filename)?;
+fn main() -> Result<()> {
+    let args = Args::parse();
+    let file = std::fs::read_to_string(args.filename)?;
     let mut markov = MarkovChain::new(args.max_look);
     for line in file.lines() {
         markov.train(line.to_lowercase().chars());
@@ -56,4 +57,6 @@ main!(|args: Cli| {
         },
     }
 
-});
+    Ok(())
+
+}

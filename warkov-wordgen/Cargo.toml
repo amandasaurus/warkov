@@ -1,12 +1,12 @@
 [package]
 name = "warkov-wordgen"
-version = "0.1.0"
-authors = ["Rory McCann <rory@technomancy.org>"]
+version = "0.2.0"
+authors = ["Amanda McCann <rory@technomancy.org>"]
 license = "AGPL-3.0+"
-repository = "https://github.com/rory/warkov"
+repository = "https://github.com/amandasaurus/warkov"
 description = "Use markov-chains to generate new items"
 
 
 [dependencies]
 warkov = "0.1"
-quicli = "0.3"
+clap = { version = "3.2.18", features = ["derive"] }
