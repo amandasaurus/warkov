@@ -24,17 +24,18 @@
 //! ```
 extern crate rand;
 
-use std::collections::{HashMap, BTreeMap};
-use std::hash::Hash;
-use std::fmt::Debug;
 pub use rand::Rng;
+use std::collections::{BTreeMap, HashMap};
+use std::fmt::Debug;
+use std::hash::Hash;
 
 /// A Markov Chain.
 ///
 #[derive(Default)]
 pub struct MarkovChain<T, R>
-    where T: Hash + Eq + Clone + Default + Ord + Debug,
-          R: Rng,
+where
+    T: Hash + Eq + Clone + Default + Ord + Debug,
+    R: Rng,
 {
     size: usize,
     rng: R,
@@ -43,7 +44,8 @@ pub struct MarkovChain<T, R>
 }
 
 impl<T> MarkovChain<T, rand::ThreadRng>
-    where T: Hash + Eq + Clone + Default + Ord + Debug,
+where
+    T: Hash + Eq + Clone + Default + Ord + Debug,
 {
     /// Creates a MarkovChain with the max look a head size.
     /// Uses the stock thread local random number generator
@@ -56,8 +58,9 @@ impl<T> MarkovChain<T, rand::ThreadRng>
 }
 
 impl<T, R> MarkovChain<T, R>
-    where T: Hash + Eq + Clone + Default + Ord + Debug,
-          R: Rng,
+where
+    T: Hash + Eq + Clone + Default + Ord + Debug,
+    R: Rng,
 {
     /// Creates a MarkovChain with the specified random number generator, and max look a head size
     ///
@@ -65,7 +68,12 @@ impl<T, R> MarkovChain<T, R>
     /// If size is 0.
     pub fn new_with_rng(size: usize, rng: R) -> Self {
         assert!(size > 0);
-        MarkovChain{ size, rng: rng,  stages: HashMap::new(), alphabet: (0, BTreeMap::new()) }
+        MarkovChain {
+            size,
+            rng: rng,
+            stages: HashMap::new(),
+            alphabet: (0, BTreeMap::new()),
+        }
     }
 
     /// Change the random number generation for this object to `rng`.
@@ -84,7 +92,7 @@ impl<T, R> MarkovChain<T, R>
     }
 
     /// Teach the markov chain this `term`.
-    pub fn train(&mut self, term: impl Iterator<Item=T>) {
+    pub fn train(&mut self, term: impl Iterator<Item = T>) {
         let term: Vec<T> = term.into_iter().collect();
         self.alphabet.0 += term.len();
         for t in term.iter() {
@@ -95,14 +103,12 @@ impl<T, R> MarkovChain<T, R>
         term.push(None);
 
         for idx in 1..term.len() {
-
-            for len in 1..(self.size+1) {
+            for len in 1..(self.size + 1) {
                 if len <= idx {
-                    self.record_occurance(&term[idx-len..idx], term[idx].clone());
+                    self.record_occurance(&term[idx - len..idx], term[idx].clone());
                 }
             }
         }
-
     }
 
     /// Generates a term.
@@ -122,7 +128,6 @@ impl<T, R> MarkovChain<T, R>
         let mut curr: Vec<Option<T>> = vec![None];
         let mut next: Option<T>;
 
-
         loop {
             loop {
                 match self.stages.get(&curr) {
@@ -134,13 +139,12 @@ impl<T, R> MarkovChain<T, R>
                             curr.remove(0);
                             continue;
                         }
-                    },
+                    }
                     Some(stats) => {
                         next = weighted_choice(&mut self.rng, stats);
                         break;
                     }
                 }
-
             }
 
             if next == None {
@@ -157,17 +161,19 @@ impl<T, R> MarkovChain<T, R>
 
         result
     }
-
 }
 
-fn weighted_choice<'a, T: Debug+Clone+Default, R: Rng>(rng: &mut R, options: &'a (usize, BTreeMap<T, usize>)) -> T {
+fn weighted_choice<'a, T: Debug + Clone + Default, R: Rng>(
+    rng: &mut R,
+    options: &'a (usize, BTreeMap<T, usize>),
+) -> T {
     debug_assert_eq!(options.0, options.1.values().sum());
     let random_number = rng.gen_range(0, options.0);
     let mut curr_value = 0;
     let mut last_key = &T::default();
     for (key, value) in options.1.iter() {
         last_key = key;
-        if random_number >= curr_value && random_number < curr_value+value {
+        if random_number >= curr_value && random_number < curr_value + value {
             return key.clone();
         }
         curr_value += value;
@@ -175,7 +181,6 @@ fn weighted_choice<'a, T: Debug+Clone+Default, R: Rng>(rng: &mut R, options: &'a
 
     return last_key.to_owned();
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -195,7 +200,10 @@ mod tests {
 
     fn has_key_w_none_predict<R: Rng>(mc: &MarkovChain<char, R>, k: &str) -> bool {
         let k: Vec<Option<char>> = k.chars().map(|s| Some(s.clone())).collect();
-        mc.stages.get(&k).map(|stats| stats.1.contains_key(&None)).unwrap_or(false)
+        mc.stages
+            .get(&k)
+            .map(|stats| stats.1.contains_key(&None))
+            .unwrap_or(false)
     }
 
     #[test]
@@ -222,7 +230,6 @@ mod tests {
         assert!(has_key(&mc, "b"));
         assert!(has_key(&mc, "c"));
         assert!(!has_key(&mc, "d"));
-
     }
 
     #[test]
@@ -263,9 +270,7 @@ mod tests {
         assert!(has_key(&mc, "rus"));
         assert!(has_key(&mc, "ust"));
         assert!(!has_key(&mc, "rust"));
-
     }
-
 
     fn easy_rng() -> impl Rng {
         rand::prng::XorShiftRng::from_seed([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
@@ -286,7 +291,6 @@ mod tests {
         }
         assert_eq!(stats[&Some('a')], 328);
         assert_eq!(stats[&Some('b')], 672);
-        
     }
 
     #[test]
@@ -308,15 +312,22 @@ mod tests {
         assert_eq!(stats[&Some('b')], 3293);
         assert_eq!(stats[&Some('c')], 3405);
         assert_eq!(stats[&Some('d')], 3287);
-        
     }
 
     fn prediction_result<R: Rng>(mc: &mut MarkovChain<char, R>) -> String {
-        mc.generate().into_iter().map(|c| c.to_string()).collect::<Vec<String>>().join("")
+        mc.generate()
+            .into_iter()
+            .map(|c| c.to_string())
+            .collect::<Vec<String>>()
+            .join("")
     }
 
     fn prediction_result_size<R: Rng>(mc: &mut MarkovChain<char, R>, size: usize) -> String {
-        mc.generate_max_look(size).into_iter().map(|c| c.to_string()).collect::<Vec<String>>().join("")
+        mc.generate_max_look(size)
+            .into_iter()
+            .map(|c| c.to_string())
+            .collect::<Vec<String>>()
+            .join("")
     }
 
     #[test]
@@ -335,6 +346,5 @@ mod tests {
         assert_eq!(prediction_result_size(&mut mc, 1), "bc");
         assert_eq!(prediction_result_size(&mut mc, 1), "acbc");
         assert_eq!(prediction_result_size(&mut mc, 1), "ac");
-
     }
 }
