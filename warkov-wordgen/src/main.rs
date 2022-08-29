@@ -16,21 +16,21 @@ use warkov::MarkovChain;
     about = "Generate words from a file of existing words"
 )]
 struct Args {
-    #[clap(short, long, default_value = "10")]
-    /// The number of new words to generate (unless `min_look` is specified)
+    #[clap(short, long, default_value = "10", value_name="N")]
+    /// The number of new words to generate (unless `min-look` is specified)
     num: usize,
 
-    #[clap(long = "max-look", default_value = "3")]
+    #[clap(long = "max-look", default_value = "3", value_name="N")]
     /// The max lookbehind to use when generating
     max_look: usize,
 
-    #[clap(long = "min-look")]
-    /// If specified, `num` items will be generated from every lookbehind value from `min_look` to
-    /// `max_look` inclusive.
+    #[clap(long = "min-look", value_name="N")]
+    /// If specified, `num` items will be generated from every lookbehind value from `min-look` to
+    /// `max-look` inclusive.
     min_look: Option<usize>,
 
     #[clap(parse(from_os_str))]
-    /// Filename to read example words from
+    /// Filename to read example words from, e.g. /usr/share/dict/words
     filename: PathBuf,
 }
 
