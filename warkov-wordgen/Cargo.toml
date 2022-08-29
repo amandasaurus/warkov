@@ -5,6 +5,7 @@ authors = ["Amanda McCann <rory@technomancy.org>"]
 license = "AGPL-3.0+"
 repository = "https://github.com/amandasaurus/warkov"
 description = "Use markov-chains to generate new items"
+edition = "2021"
 
 
 [dependencies]

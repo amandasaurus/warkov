@@ -1,6 +1,6 @@
 extern crate warkov;
 extern crate anyhow;
-#[macro_use] extern crate clap;
+extern crate clap;
 use clap::Parser;
 
 use std::path::PathBuf;
