@@ -1,4 +1,5 @@
 extern crate warkov;
+extern crate anyhow;
 #[macro_use] extern crate clap;
 use clap::Parser;
 
